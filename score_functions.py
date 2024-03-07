@@ -5,29 +5,28 @@ import pycoingecko
 
 load_dotenv()
 gecko = pycoingecko.CoinGeckoAPI()
-token_id = {i['symbol']:i['id'] for i in gecko.get_coins_list()}  # Not working properly
+symbol_to_id = {i['symbol']:i['id'] for i in gecko.get_coins_list()}  # Not working properly
 
-token_data = gecko.get_coin_by_id()
 
-def get_sentiment(token):
-    up = token_data['sentiment_votes_up_percentage']
-    down = token_data['sentiment_votes_down_percentage']
+def get_sentiment(symbol):
+    up = symbol_data['sentiment_votes_up_percentage']
+    down = symbol_data['sentiment_votes_down_percentage']
     if up > down: return (up-down)/100
     if up < down: return (down-up)/100
 
-def get_socialmedia(token):
+def get_socialmedia(symbol):
     pass
 
-def get_news_score(token):
+def get_news_score(symbol):
     pass
 
-def get_exchange_score(token):
+def get_exchange_score(symbol):
     pass
 
-def get_market_score(token):
+def get_market_score(symbol):
     pass
 
-def make_ta(token):
+def make_ta(symbol):
     pass
 
 def join_scores():
@@ -36,9 +35,11 @@ def join_scores():
 def update_ranking():
     pass
 
-def get_token_data(symbol):
-    # Gererate dict from the result of score functions
+def get_token_data(symbol):    
+    symbol_data = gecko.get_coin_by_id()
+    # Generate dict from results of score functions
     return {
+        'id': symbol_to_id[symbol],
         'sentiment': get_sentiment(symbol),
         'social': get_socialmedia(symbol),
         'news': get_news_score(symbol),
