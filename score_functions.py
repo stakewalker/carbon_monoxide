@@ -45,4 +45,3 @@ def get_token_data(symbol):
         'exchange': get_exchange_score(symbol),
         'ta': make_ta(symbol)
     }
-    pass
