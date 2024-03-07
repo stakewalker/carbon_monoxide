@@ -1,16 +1,22 @@
 import os
 import json
 
+
+
 class Token:
     def __init__(self, symbol):
+        token_data = get_token_data(symbol)
         self.symbol = symbol
-        self.id = coingecko_data[symbol]
-        self.scores = {'sentiment': get_sentiment(symbol),
-                       'socialmedia': get_socialmedia(symbol),
-                       'ta': make_technical_analysis(symbol),
-                       'news': get_news_score(symbol),
-                       'exchange': get_exchange_score(symbol)
+        self.id = token_data['id']
+        self.all_scores = {'sentiment': token_data['sentiment'],
+                       'socialmedia': token_data['social'],
+                       'news': token_data['news'],
+                       'exchange': token_data['exchanges'],
+                       'ta_score': token_data['ta']
                        }
+    def score():
+        pass
+
     def join_ranking(self, ranking):
         self.ranking = ranking
         ranking.add_token(self)
