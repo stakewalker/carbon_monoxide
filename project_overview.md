@@ -31,3 +31,6 @@
     - CoinGecko API
     - CoinMarketCap API
 
+# Ideas
+    - What about run random forest using scores?
+
