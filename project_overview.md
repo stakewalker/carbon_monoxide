@@ -32,5 +32,5 @@
     - CoinMarketCap API
 
 # Ideas
-    - What about run random forest using scores?
+## What about running random forest using scores as inputs?
 
