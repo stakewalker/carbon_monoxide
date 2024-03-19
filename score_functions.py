@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-#import requests
 import pycoingecko
 
 load_dotenv()
