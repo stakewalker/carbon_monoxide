@@ -3,7 +3,7 @@ from textblob import TextBlob
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-news_data = requests.get('https://min-api.cryptocompare.com/data/v2/news/?categories=BTC,ETH&excludeCategories=Sponsored').json()['Data']
+news_data = requests.get('https://min-api.cryptocompare.com/data/v2/news/?excludeCategories=Sponsored').json()['Data']
 
 # Download and initialize
 nltk.download('vader_lexicon')
