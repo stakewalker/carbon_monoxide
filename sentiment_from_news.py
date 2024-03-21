@@ -19,6 +19,7 @@ def get_sentiment(text):
 counter = 0
 for i in news_data:
     print({
+        f'id:{counter}',
         i['title'],
         get_sentiment(i['title']),
         i['body'],
