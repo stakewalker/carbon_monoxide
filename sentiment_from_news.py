@@ -2,27 +2,25 @@ import requests
 from textblob import TextBlob
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from rich import print
 
-news_data = requests.get('https://min-api.cryptocompare.com/data/v2/news/?excludeCategories=Sponsored').json()['Data']
 
 # Download and initialize
 nltk.download('vader_lexicon')
 sia = SentimentIntensityAnalyzer()
 
-def get_sentiment(text):
-    # Use the polarity_scores method to get the sentiment metrics
-    sentiment = sia.polarity_scores(text)
-    
-    # -1 (most extreme negative) and +1 (most extreme positive)
-    return sentiment['compound']
+def get_news_sentiment():
+    sia = SentimentIntensityAnalyzer()
+    news_data = requests.get('https://min-api.cryptocompare.com/data/v2/news/?excludeCategories=Sponsored').json()['Data']
+    counter = 0
+    for i in news_data:
+        print({
+            'id': counter,
+            'title': i['title'],
+            'title_sentiment': sia.polarity_scores(i['title'])['compound'],
+            'body': i['body'],
+            'body_sentiment': sia.polarity_scores(i['body'])['compound']
+            })
+        counter += 1
 
-counter = 0
-for i in news_data:
-    print({
-        f'id:{counter}',
-        i['title'],
-        get_sentiment(i['title']),
-        i['body'],
-        get_sentiment(i['body'])
-        })
-    counter += 1
+get_news_sentiment()
