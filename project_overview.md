@@ -20,12 +20,6 @@
     - CryptoPanic API
     - CryptoCompare
 
-# Market Dynamics and Manipulation
-  Cryptocurrency Exchange APIs:
-    - Binance API
-    - Coinbase Pro API
-    - CoinGecko API
-
 # Overall Market Conditions and Speculative Activity
   Crypto Market data:
     - CoinGecko API
