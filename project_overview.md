@@ -20,10 +20,5 @@
     - CryptoPanic API
     - CryptoCompare
 
-# Overall Market Conditions and Speculative Activity
-  Crypto Market data:
-    - CoinGecko API
-    - CoinMarketCap API
-
 # Ideas
 - Running random forest using scores as inputs
