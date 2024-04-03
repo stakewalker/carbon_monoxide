@@ -28,9 +28,6 @@ def get_market_score(symbol):
 def make_ta(symbol):
     pass
 
-def join_scores():
-    pass
-
 def update_ranking():
     pass
 
