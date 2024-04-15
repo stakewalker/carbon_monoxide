@@ -1,7 +1,6 @@
 import os
 import json
 
-
 class Token:
     def __init__(self, symbol):
         token_data = get_token_data(symbol)
@@ -22,7 +21,6 @@ class Token:
         
     def update_ranking(self):
         self.ranking.update_token(self)
-
 
 class Ranking:
     def __init__(self):
