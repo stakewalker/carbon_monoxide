@@ -48,3 +48,4 @@ class Ranking:
         if token in self.rankings:
             del self.rankings[token]
             self.update()
+
