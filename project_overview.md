@@ -1,25 +1,8 @@
-# Market Sentiment and Social Media
-  Sentiment Analysis tools:
-    - Santiment
-    - The TIE
-    - Alchemy API
-    - Social Animal API
-
-  Social Media monitoring:
-    - Social Mention API
-    - Hootsuite API
-
-# Technical Analysis and Trading Activity
-  Crypto Market analysis:
-    - Trading View API
-    - Coinigy API
-
-# Fundamentals and News Catalysts
-  Crypto News aggregator:
-    - Coindesk API
-    - CryptoPanic API
-    - CryptoCompare
-
-# Ideas
-- Running random forest using scores as inputs
-- 
+# The Idea Is:
+- Listen to Telegram crypto signal channels
+- Register tokens as it's posted
+  - Current price ($)
+  - Current time (UTC)
+- Monitor data and backtesting
+- Post % difference each 1%, until user dismiss
+- Alternatively it could plot TradingView graphs
