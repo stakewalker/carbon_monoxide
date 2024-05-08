@@ -12,7 +12,12 @@ api_hash = os.getenv('TG_API_HASH')
 phone_number = os.getenv('PHONE_NUMBER')
 
 # List of channels names or IDs
-channels = ['channel_or_id_1', 'channel_or_id_2']
+channels = ["channel_name_or_id_1", "channel_name_or_id_2"]
+
+# RegEx function to find #TOKEN and $TOKEN patterns in msgs
+def filter_pattern(text):
+    matches = re.findall(r'#[A-Z]{3}|\$[A-Z]{3}',text)
+    if len(matches) >= 1: return matches[0][1:]
 
 # Create the client and connect
 client = TelegramClient('anon', api_id, api_hash)
@@ -20,16 +25,14 @@ client = TelegramClient('anon', api_id, api_hash)
 async def main():
     # Connecting and authorizing
     await client.start(phone_number)
-    print("Client Created")
+    print("Client Started...")
     
     # Listening to messages from channels
     @client.on(events.NewMessage(chats=channels))
     async def handler(event):
-        message_content = event.message.message
-        print(f"New message from {event.chat_id}: {message_content}")
-        # Here you can save the message content to a file or database
-        with open('messages.txt', 'a', encoding='utf-8') as f:
-            f.write(f"Channel {event.chat_id}: {message_content}\n")
+        message_content = filter_pattern(event.message.message)
+        if message_content >= 1:
+            print(f"New message from {event.chat_id}: {message_content}")
 
     print(f"Listening to messages from {len(channels)} channels...")
     await client.run_until_disconnected()
