@@ -1,4 +1,4 @@
-# This function listens to signals on some Telegram channels
+# This function listens to signals on Telegram crypto channels
 # get your api key on my.telegram.org
 
 import asyncio, os
