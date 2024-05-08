@@ -31,7 +31,7 @@ async def main():
     @client.on(events.NewMessage(chats=channels))
     async def handler(event):
         message_content = filter_pattern(event.message.message)
-        if message_content >= 1:
+        if len(message_content) >= 1:
             print(f"New message from {event.chat_id}: {message_content}")
 
     print(f"Listening to messages from {len(channels)} channels...")
