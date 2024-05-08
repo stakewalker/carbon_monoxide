@@ -1,7 +1,7 @@
 # This function listens to signals on Telegram crypto channels
 # get your api key on my.telegram.org
 
-import asyncio, os
+import asyncio, os, re
 from telethon import TelegramClient, events
 from dotenv import load_dotenv
 
