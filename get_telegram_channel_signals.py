@@ -16,7 +16,7 @@ channels = ["channel_name_or_id_1", "channel_name_or_id_2"]
 
 # RegEx function to find #TOKEN and $TOKEN patterns in msgs
 def filter_pattern(text):
-    matches = re.findall(r'#[A-Z]{3}|\$[A-Z]{3}',text)
+    matches = re.findall(r'#[A-Z]+|\$[A-Z]+', text)
     if len(matches) >= 1: return matches[0][1:]
 
 # Create the client and connect
@@ -31,8 +31,12 @@ async def main():
     @client.on(events.NewMessage(chats=channels))
     async def handler(event):
         message_content = filter_pattern(event.message.message)
-        if len(message_content) >= 1:
-            print(f"New message from {event.chat_id}: {message_content}")
+        try:
+            if len(message_content) >= 1:
+                await client.send_message("channel_or_name", str(message_content))
+                print(f"New message from {event.chat.username}: {message_content}")
+        except:
+            pass
 
     print(f"Listening to messages from {len(channels)} channels...")
     await client.run_until_disconnected()
