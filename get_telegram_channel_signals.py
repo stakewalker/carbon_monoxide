@@ -32,7 +32,7 @@ async def main():
     async def handler(event):
         message_content = filter_pattern(event.message.message)
         try:
-            if len(message_content) >= 1:
+            if len(message_content) >= 2:  
                 await client.send_message("channel_or_name", str(message_content))
                 print(f"New message from {event.chat.username}: {message_content}")
         except:
