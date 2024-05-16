@@ -1,3 +1,5 @@
+# Optimized for Binance Spot
+
 import requests
 
 binance_tokens = [symbol['symbol'][:-4] for symbol in requests.get('https://api.binance.com/api/v3/exchangeInfo').json()['symbols'] if symbol['symbol'].endswith('USDT')]
