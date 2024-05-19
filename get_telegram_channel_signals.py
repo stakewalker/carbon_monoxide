@@ -12,7 +12,7 @@ api_hash = os.getenv('TG_API_HASH')
 phone_number = os.getenv('PHONE_NUMBER')
 
 # List of channels names or IDs
-channels = ["channel_name_or_id_1", "channel_name_or_id_2"]
+channels = ["channel_name_or_id_1", "channel_name_or_id_2", "etc"]
 
 # RegEx function to find #TOKEN and $TOKEN patterns in msgs
 def filter_pattern(text):
