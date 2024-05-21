@@ -1,7 +1,5 @@
-# This function listens to signals on Telegram crypto channels
-# get your api key on my.telegram.org
-
-import asyncio, os, re
+import asyncio, os, re, csv
+from datetime import datetime
 from telethon import TelegramClient, events
 from dotenv import load_dotenv
 
@@ -12,12 +10,33 @@ api_hash = os.getenv('TG_API_HASH')
 phone_number = os.getenv('PHONE_NUMBER')
 
 # List of channels names or IDs
-channels = ["channel_name_or_id_1", "channel_name_or_id_2", "etc"]
+channels = [
+    'crypto_futures_king', 'kimoncrypto', 'CryptoKlondike',
+    'AltcoinWolves', 'wallstreetqueenofficial', 'binancekillers',
+    'FedRussianInsiders', 'wolfoftrading', 'binancesignals',
+]
 
 # RegEx function to find #TOKEN and $TOKEN patterns in msgs
 def filter_pattern(text):
     matches = re.findall(r'#[A-Z]+|\$[A-Z]+', text)
-    if len(matches) >= 1: return matches[0][1:]
+    return [match[1:] for match in matches] if matches else []
+
+# Check if token exists in CSV
+def token_exists(token):
+    if not os.path.exists('tokens.csv'):
+        return False
+    with open('tokens.csv', 'r') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row[2] == token:
+                return True
+    return False
+
+# Append token to CSV
+def append_to_csv(timestamp, channel, token):
+    with open('tokens.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([timestamp, channel, token, "[]"])
 
 # Create the client and connect
 client = TelegramClient('anon', api_id, api_hash)
@@ -32,17 +51,16 @@ async def main():
     async def handler(event):
         message_content = filter_pattern(event.message.message)
         try:
-            if message_content.endswith("USDT"):
-                message_content = message_content[:-4]
-            if len(message_content) >= 2:  
-                await client.send_message("channel_or_name", str(message_content))
-                print(f"New message from {event.chat.username}: {message_content}")
-        except:
-            pass
+            for token in message_content:
+                if not token_exists(token):
+                    timestamp = datetime.now().isoformat()
+                    append_to_csv(timestamp, event.chat.username, token)
+                    await client.send_message("channel_or_name", token)  # Replace with the correct recipient
+                    print(f"New message from {event.chat.username}: {token}")
+        except Exception as e:
+            print(f"Error: {e}")
 
     print(f"Listening to messages from {len(channels)} channels...")
     await client.run_until_disconnected()
 
 asyncio.run(main())
-
-
