@@ -10,7 +10,7 @@ api_hash = os.getenv('TG_API_HASH')
 phone_number = os.getenv('PHONE_NUMBER')
 # List of channels names or IDs (CHANNEL_LIST="1,2,3")
 channels = os.getenv('CHANNEL_LIST').split(",")
-recipient = os.getenv('MSG_RECEIVER')  # Who's gonna receive the message?
+recipient = os.getenv('MSG_RECEIVER')  # Who's going to receive the message?
 
 # RegEx function to find #TOKEN and $TOKEN patterns in msgs
 def filter_pattern(text):
