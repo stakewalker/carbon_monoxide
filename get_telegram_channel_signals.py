@@ -17,7 +17,6 @@ def filter_pattern(text):
     matches = re.findall(r'#[A-Z]{2,}|\$[A-Z]{2,}', text)
     return [match[1:].upper() for match in matches] if matches else []
 
-
 # Check if token exists in CSV
 def token_exists(token):
     if not os.path.exists('tokens.csv'):
@@ -35,6 +34,10 @@ def append_to_csv(timestamp, channel, token):
         writer = csv.writer(f)
         writer.writerow([timestamp, channel, token, "[]"])
 
+# Funtion to get TOKEN price from CoinGecko
+def get_price(token_id):
+    return requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={token_id}&vs_currencies=usd").json().get(token_id, {}).get('usd', None)
+
 # Create the client and connect
 client = TelegramClient('anon', api_id, api_hash)
 
@@ -50,16 +53,18 @@ async def main():
         try:
             for token in message_content:
                 if not token_exists(token):
-                    timestamp = datetime.now()
+                    token_price_now = get_price(token)
                     append_to_csv(
                         int(datetime.now(timezone.utc).timestamp()),  # Time at the moment
                         event.chat.username,  # Channel name
-                        token  # Token ID
+                        token,  # Token ID
+                        [token_price_now]
                         )
-                    await client.send_message(recipient, token)  # Replace with the correct recipient
-                    print(f"New message from {event.chat.username}: {token}")
+                    final_msg = f"New message from {event.chat.username}: {token} @ ${token_price_now}"
+                    await client.send_message(recipient, token)  
+                    print(final_msg)
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error fetching new token from {event.chat.username}")
 
     print(f"Listening to messages from {len(channels)} channels...")
     await client.run_until_disconnected()
