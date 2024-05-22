@@ -1,5 +1,5 @@
 import asyncio, os, re, csv
-from datetime import datetime
+from datetime import datetime, timezone
 from telethon import TelegramClient, events
 from dotenv import load_dotenv
 
@@ -8,18 +8,15 @@ load_dotenv()
 api_id = os.getenv('TG_API_ID')
 api_hash = os.getenv('TG_API_HASH')
 phone_number = os.getenv('PHONE_NUMBER')
-
-# List of channels names or IDs
-channels = [
-    'crypto_futures_king', 'kimoncrypto', 'CryptoKlondike',
-    'AltcoinWolves', 'wallstreetqueenofficial', 'binancekillers',
-    'FedRussianInsiders', 'wolfoftrading', 'binancesignals',
-]
+# List of channels names or IDs (CHANNEL_LIST="1,2,3")
+channels = os.getenv('CHANNEL_LIST').split(",")
+recipient = os.getenv('MSG_RECEIVER')  # Who's gonna receive the message?
 
 # RegEx function to find #TOKEN and $TOKEN patterns in msgs
 def filter_pattern(text):
-    matches = re.findall(r'#[A-Z]+|\$[A-Z]+', text)
-    return [match[1:] for match in matches] if matches else []
+    matches = re.findall(r'#[A-Z]{2,}|\$[A-Z]{2,}', text)
+    return [match[1:].upper() for match in matches] if matches else []
+
 
 # Check if token exists in CSV
 def token_exists(token):
@@ -53,9 +50,13 @@ async def main():
         try:
             for token in message_content:
                 if not token_exists(token):
-                    timestamp = datetime.now().isoformat()
-                    append_to_csv(timestamp, event.chat.username, token)
-                    await client.send_message("channel_or_name", token)  # Replace with the correct recipient
+                    timestamp = datetime.now()
+                    append_to_csv(
+                        int(datetime.now(timezone.utc).timestamp()),  # Time at the moment
+                        event.chat.username,  # Channel name
+                        token  # Token ID
+                        )
+                    await client.send_message(recipient, token)  # Replace with the correct recipient
                     print(f"New message from {event.chat.username}: {token}")
         except Exception as e:
             print(f"Error: {e}")
