@@ -29,16 +29,15 @@ def token_exists(token):
     return False
 
 # Append token to CSV
-def append_to_csv(timestamp, channel, token):
+def append_to_csv(timestamp, channel, token, item_list):
     with open('tokens.csv', 'a', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([timestamp, channel, token, "[]"])
+        writer.writerow([timestamp, channel, token, item_list])
 
 # Function to get TOKEN price from Binance Spot
 binance_tokens = [symbol['symbol'][:-4] for symbol in requests.get('https://api.binance.com/api/v3/exchangeInfo').json()['symbols'] if symbol['symbol'].endswith('USDT')]
 def get_price(token):
-     if token in binance_tokens:
-        return float(requests.get(f'https://api.binance.com/api/v3/ticker/price?symbol={token.upper()}USDT').json()['price'])
+    return float(requests.get(f'https://api.binance.com/api/v3/ticker/price?symbol={token.upper()}USDT').json()['price'])
 
 # Create the client and connect
 client = TelegramClient('anon', api_id, api_hash)
@@ -52,9 +51,10 @@ async def main():
     @client.on(events.NewMessage(chats=channels))
     async def handler(event):
         message_content = filter_pattern(event.message.message)
-        try:
-            for token in message_content:
-                if not token_exists(token):
+        #try:
+        for token in message_content:
+            if not token_exists(token):
+                if token in binance_tokens:
                     token_price_now = get_price(token)
                     append_to_csv(
                         int(datetime.now(timezone.utc).timestamp()),  # Time at the moment
@@ -63,10 +63,10 @@ async def main():
                         [token_price_now]
                         )
                     final_msg = f"New message from {event.chat.username}: {token} @ ${token_price_now}"
-                    await client.send_message(recipient, token)  
+                    await client.send_message(final_msg)  
                     print(final_msg)
-        except Exception as e:
-            print(f"Error fetching new token from {event.chat.username}")
+            #except Exception as e:
+        #    print(f"Error fetching new token from {event.chat.username}")
 
     print(f"Listening to messages from {len(channels)} channels...")
     await client.run_until_disconnected()
