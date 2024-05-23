@@ -64,7 +64,7 @@ async def main():
                         token,  # Token ID
                         [token_price_now]
                         )
-                    await client.send_message(final_msg)  
+                    await client.send_message(recipient, final_msg)
                     print(final_msg)
             #except Exception as e:
         #    print(f"Error fetching new token from {channel_name}")
