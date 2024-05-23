@@ -1,4 +1,4 @@
-import asyncio, os, re, csv
+import asyncio, os, re, csv, requests
 from datetime import datetime, timezone
 from telethon import TelegramClient, events
 from dotenv import load_dotenv
@@ -34,9 +34,11 @@ def append_to_csv(timestamp, channel, token):
         writer = csv.writer(f)
         writer.writerow([timestamp, channel, token, "[]"])
 
-# Funtion to get TOKEN price from CoinGecko
-def get_price(token_id):
-    return requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={token_id}&vs_currencies=usd").json().get(token_id, {}).get('usd', None)
+# Function to get TOKEN price from Binance Spot
+binance_tokens = [symbol['symbol'][:-4] for symbol in requests.get('https://api.binance.com/api/v3/exchangeInfo').json()['symbols'] if symbol['symbol'].endswith('USDT')]
+def get_price(token):
+     if token in binance_tokens:
+        return float(requests.get(f'https://api.binance.com/api/v3/ticker/price?symbol={token.upper()}USDT').json()['price'])
 
 # Create the client and connect
 client = TelegramClient('anon', api_id, api_hash)
