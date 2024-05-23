@@ -57,7 +57,7 @@ async def main():
                 if token in binance_tokens:
                     token_price_now = get_price(token)
                     channel_name = event.chat.username
-                    final_msg = f"New message from {channel_name}: {token} @ ${token_price_now}"
+                    final_msg = f"New message from @{channel_name}: #{token} @ ${token_price_now}"
                     append_to_csv(
                         int(datetime.now(timezone.utc).timestamp()),  # Time at the moment
                         channel_name,  # Channel name
