@@ -6,6 +6,15 @@ binance_tokens = [symbol['symbol'][:-4] for symbol in requests.get('https://api.
 def get_token_info(symbol):
     return requests.get(f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol.upper()}").json()
 
+def get_rsi(symbol):
+    closes = [float(entry[4]) for entry in requests.get(f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval=1h&limit=14").json()]
+    changes = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+    up_moves = [change for change in changes if change > 0]
+    down_moves = [abs(change) for change in changes if change < 0]
+    avg_gain = sum(up_moves) / 14
+    avg_loss = sum(down_moves) / 14
+    rs = avg_gain / avg_loss
+    return int(100 - (100 / (1 + rs)))
 
 def append_to_csv(token_info):
     with open("token_db.csv", mode='a', newline='') as file:
@@ -30,13 +39,16 @@ def append_to_csv(token_info):
                          token_info.get('closeTime', ''),
                          token_info.get('firstId', ''),
                          token_info.get('lastId', ''),
-                         token_info.get('count', '')])
+                         token_info.get('count', ''),
+                         get_rsi(token_info['symbol'])
+                         ])
 
 counter = 0
 
-for i in binance_tokens:
-    token_info = get_token_info(i+'USDT')
+for token in binance_tokens:
+    token_info = get_token_info(token+'USDT')
     if token_info:
         append_to_csv(token_info)
         counter += 1
         print(f"{counter}: {token_info['symbol']}")
+
