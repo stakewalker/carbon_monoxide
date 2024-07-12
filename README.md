@@ -1,1 +1,1 @@
-A place to save my scripts, most related to cryptocurrency trading projects
+A place to save my scripts related to cryptocurrency trading projects
