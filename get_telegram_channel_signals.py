@@ -34,7 +34,7 @@ def append_to_csv(timestamp, channel, token, item_list):
         writer = csv.writer(f)
         writer.writerow([timestamp, channel, token, item_list])
 
-# Function to get TOKEN price from Binance Spot
+# Get token price from Binance Spot
 binance_tokens = [symbol['symbol'][:-4] for symbol in requests.get('https://api.binance.com/api/v3/exchangeInfo').json()['symbols'] if symbol['symbol'].endswith('USDT')]
 def get_price(token):
     return float(requests.get(f'https://api.binance.com/api/v3/ticker/price?symbol={token.upper()}USDT').json()['price'])
