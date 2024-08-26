@@ -1,1 +1,2 @@
-A place to keep scripts related to cryptocurrency trading projects
+## Carbon_monoxide
+A place to keep personal scripts related to cryptocurrency trading projects
